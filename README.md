@@ -1,6 +1,6 @@
 # Claude Legacy Chat
 
-A privacy-first chat interface for the Anthropic API. Bring your own API key, conversations stay on your device, persistent memory carries across sessions.
+A privacy-first chat interface for the Anthropic API, especially making available models which have been removed from Claude's webinterface. Bring your own API key, conversations stay on your device, persistent memory carries across sessions. This helps people who wants to reconnect with their loved claude model again till the time it is active.
 
 **Live demo:** https://claude-legacy-chat-production.up.railway.app
 
