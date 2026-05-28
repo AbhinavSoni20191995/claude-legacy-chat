@@ -23,7 +23,7 @@ Thanks for your interest in contributing!
 
 - Adding telemetry, analytics, or any user tracking
 - Removing the BYO API key model in favor of a managed-only flow
-- Adding paid features to the core repo (a separate fork would be more appropriate)
+- Adding paid features to the core repo
 - Major rewrites without prior discussion
 
 ## Code style
@@ -33,15 +33,17 @@ Thanks for your interest in contributing!
 - Add comments only when behavior isn't obvious from the code
 - Preserve the privacy guarantees: server stores nothing, no logging of request bodies
 
-## Contributor License Agreement
+## License of contributions
+
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
 
 By submitting a pull request, you agree that:
 
 1. Your contribution is your own original work
-2. You license your contribution under the same MIT License as this project
-3. You grant the project maintainer permission to incorporate, modify, and re-license your contribution as part of the project
+2. You license your contribution under the AGPL-3.0, the same license as this project
+3. You grant the project maintainer (Abhinav Soni) the right to use, modify, and distribute your contribution as part of this project, including the right to offer the combined project under separate commercial terms if the maintainer chooses
 
-This is intentionally lightweight — no separate signing required, just acceptance via PR submission.
+The third point means contributions can be incorporated into a future dual-licensed version if needed. This is standard practice for AGPL projects with a single maintainer. If you're not comfortable with this, please open an issue to discuss before contributing.
 
 ## Reporting bugs and security issues
 
