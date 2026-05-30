@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="theme-color" content="#0e0f11"/>
+  <title>Migrate from Claude.ai · Claude Legacy Chat</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Fraunces:ital,opsz,wght@1,9..144,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --bg: #0e0f11; --surface: #16181c; --surface2: #1c1e24;
+      --border: #252830; --border-light: #2e3138;
+      --text: #e8e9ec; --text-dim: #5a6070; --text-mid: #8a90a8;
+      --accent: #c8a96e; --accent-dim: rgba(200,169,110,0.12); --accent-border: rgba(200,169,110,0.25);
+      --green: #7eb892;
+      --mono: 'DM Mono', monospace; --serif: 'Fraunces', serif;
+      --safe-top: env(safe-area-inset-top, 44px); --safe-bottom: env(safe-area-inset-bottom, 20px);
+    }
+    html { height: 100%; background: var(--bg); }
+    body {
+      background: var(--bg); color: var(--text); font-family: var(--mono);
+      font-size: 14px; line-height: 1.65;
+      padding-top: calc(var(--safe-top) + 16px);
+      padding-bottom: calc(var(--safe-bottom) + 20px);
+      -webkit-font-smoothing: antialiased; min-height: 100vh;
+    }
+    .container { max-width: 620px; margin: 0 auto; padding: 0 20px; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--text-dim); text-decoration: none;
+      font-size: 12px; letter-spacing: 0.04em;
+      padding: 8px 14px; background: var(--surface);
+      border: 1px solid var(--border-light); border-radius: 20px;
+      margin-bottom: 28px; transition: all 0.15s;
+    }
+    .back-link:active { color: var(--accent); border-color: var(--accent-border); }
+    h1 { font-family: var(--serif); font-style: italic; font-size: 30px; color: var(--accent); margin-bottom: 4px; line-height: 1.1; font-weight: 400; }
+    .subtitle { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 24px; }
+    h2 { font-family: var(--serif); font-style: italic; font-size: 19px; color: var(--text); margin: 30px 0 12px; font-weight: 400; line-height: 1.3; }
+    p { color: var(--text-mid); margin-bottom: 12px; font-size: 13.5px; }
+    strong { color: var(--text); font-weight: 500; }
+    a { color: var(--accent); text-decoration: none; }
+    ul, ol { margin: 10px 0 14px; padding-left: 22px; color: var(--text-mid); font-size: 13.5px; }
+    li { margin-bottom: 6px; }
+    .step { background: var(--surface); border: 1px solid var(--border-light); border-radius: 14px; padding: 18px; margin-bottom: 12px; position: relative; }
+    .step-num { position: absolute; top: -10px; left: 14px; background: var(--accent); color: #0e0f11; font-size: 11px; font-weight: 500; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .step-title { font-size: 14px; color: var(--text); margin-bottom: 6px; font-weight: 500; padding-top: 6px; }
+    .step-body { font-size: 13px; color: var(--text-mid); line-height: 1.65; }
+    .prompt-box { background: var(--code-bg, #0a0b0d); border: 1px solid var(--accent-border); border-radius: 10px; padding: 14px; margin: 12px 0; font-size: 12px; line-height: 1.6; color: #c8d3e8; white-space: pre-wrap; position: relative; }
+    .copy-btn { position: absolute; top: 10px; right: 10px; background: var(--accent-dim); border: 1px solid var(--accent-border); color: var(--accent); border-radius: 6px; padding: 4px 10px; font-size: 11px; cursor: pointer; font-family: var(--mono); -webkit-appearance: none; }
+    .copy-btn:active { background: rgba(200,169,110,0.25); }
+    .callout { background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 10px; padding: 12px 14px; margin: 16px 0; font-size: 12.5px; color: var(--text-mid); line-height: 1.6; }
+    .callout-title { color: var(--accent); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; font-weight: 500; }
+    .warning { background: rgba(220,180,90,0.08); border: 1px solid rgba(220,180,90,0.25); border-radius: 10px; padding: 12px 14px; margin: 16px 0; font-size: 12.5px; color: var(--text-mid); line-height: 1.6; }
+    .warning-title { color: rgb(220,180,90); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; font-weight: 500; }
+    .cost-table { background: var(--surface); border: 1px solid var(--border-light); border-radius: 10px; padding: 14px; margin: 14px 0; font-size: 12.5px; }
+    .cost-row { display: flex; justify-content: space-between; padding: 5px 0; color: var(--text-mid); border-bottom: 1px solid var(--border); }
+    .cost-row:last-child { border-bottom: none; }
+    .cost-row strong { color: var(--text); font-weight: 400; }
+    .footer-note { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); text-align: center; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <a href="/" class="back-link">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to app
+  </a>
+
+  <h1>Bring your Claude.ai context here</h1>
+  <div class="subtitle">Migration guide</div>
+
+  <p>If you've been talking to a specific Claude model on claude.ai and want to keep that continuity here — your context, your history, the feel of the conversation — this guide walks you through it.</p>
+
+  <div class="callout">
+    <div class="callout-title">What you can and can't preserve</div>
+    You can transfer the <strong>facts, recent context, and conversational flow</strong>. You cannot transfer the literal "instance" — every conversation (even on claude.ai) is technically a fresh start that re-reads context. What makes continuity <em>feel</em> real is good context, and that's exactly what this transfers.
+  </div>
+
+  <h2>Step 1 — Ask Claude to summarize your conversation</h2>
+  <p>Open the claude.ai conversation you want to preserve. Paste this prompt at the end — it asks Claude to write a structured handoff document:</p>
+
+  <div class="prompt-box" id="summaryPrompt"><button class="copy-btn" onclick="copyPrompt('summaryPrompt')">Copy</button>I'm moving our conversation to another interface and want to preserve continuity. Please write a detailed handoff document I can paste into a new chat so you (a fresh instance) can pick up exactly where we are. Include:
+
+1. WHO I AM: key facts about me relevant to our conversations — work, projects, situation, preferences, communication style.
+
+2. OUR CONTEXT: what we've been working on or discussing, the current state, decisions made, and any open threads.
+
+3. HOW WE INTERACT: the tone and style of our conversation, anything about how I like you to respond.
+
+4. RECENT THREAD: a detailed summary of the most recent ~150,000 tokens worth of our conversation — be thorough, this is the most important part for continuity. Preserve specifics, not just high-level themes.
+
+5. ANYTHING ELSE worth carrying forward.
+
+Write it in the second person addressed to the new instance ("The user is...", "You and the user discussed..."). Make it dense and information-rich. Don't summarize away important detail.</div>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-title">Copy Claude's response</div>
+    <div class="step-body">Claude will produce a long handoff document. Select all of it and copy.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-title">Save it as a .txt file</div>
+    <div class="step-body">Paste into any plain-text editor (Notes, TextEdit, Notepad) and save as a <code>.txt</code> file. Name it something like <code>claude-context.txt</code>.</div>
+  </div>
+
+  <h2>Step 2 — Add your Claude.ai memory (optional but recommended)</h2>
+  <p>Claude.ai keeps a separate "memory" of facts about you. To include it:</p>
+  <ol>
+    <li>On claude.ai, go to <strong>Settings → Capabilities → Memory</strong> (or wherever memory is shown)</li>
+    <li>Copy the memory entries you see</li>
+    <li>Either paste them at the top of your <code>.txt</code> file, or add them to <strong>Profile Notes</strong> in this app's Settings</li>
+  </ol>
+
+  <h2>Step 3 — Load it into this app</h2>
+  <ol>
+    <li>Open this app → Settings → <strong>Load doc</strong></li>
+    <li>Select your <code>claude-context.txt</code> file</li>
+    <li>Pick the same model you were using on claude.ai (model picker, top nav)</li>
+    <li>Start chatting: <em>"Let's continue where we left off."</em></li>
+  </ol>
+
+  <h2>Choosing how the context is handled</h2>
+  <p>When you load a large file, this app offers you a choice of how to handle it. Here's the tradeoff:</p>
+
+  <div class="cost-table">
+    <div class="cost-row"><strong>Full / as-is</strong><span>Most faithful · most expensive</span></div>
+    <div class="cost-row"><strong>Haiku-compressed</strong><span>~85% cheaper · slight detail loss</span></div>
+    <div class="cost-row"><strong>Auto-trim</strong><span>Full until near limit, then trims oldest</span></div>
+  </div>
+
+  <div class="warning">
+    <div class="warning-title">A note on cost</div>
+    Sending a large context with every message uses a lot of tokens. With <strong>prompt caching</strong> (built in), repeated context is ~90% cheaper after the first message — but the first message and any uncached portions still cost real money. A full 150K-token context could cost <strong>$0.45 on the first message</strong> and a few cents per message after (within the 5-minute cache window). If that's too much, choose <strong>Haiku-compressed</strong> — it summarizes the file down first, cutting costs dramatically with minor detail loss.
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Our recommendation</div>
+    For most people: use <strong>Haiku-compressed</strong>. It keeps the important context while staying affordable. Only choose Full/as-is if you specifically need every detail preserved verbatim and you're comfortable with the cost.
+  </div>
+
+  <div class="footer-note">
+    Every conversation is a fresh instance — what creates continuity is context, and that's what this transfers.<br>
+    Claude Legacy Chat · Not affiliated with Anthropic, PBC
+  </div>
+
+</div>
+
+<script>
+  function copyPrompt(id) {
+    const el = document.getElementById(id);
+    const text = el.textContent.replace('Copy', '').trim();
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = el.querySelector('.copy-btn');
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = orig, 1500);
+    });
+  }
+</script>
+</body>
+</html>
